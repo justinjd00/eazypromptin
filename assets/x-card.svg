@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <defs>
+    <pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse">
+      <circle cx="1.5" cy="1.5" r="1.2" fill="#FFFFFF" fill-opacity="0.06"/>
+    </pattern>
+    <radialGradient id="g1" cx="0.12" cy="0.1" r="0.55">
+      <stop offset="0" stop-color="#C8F542" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#C8F542" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="g2" cx="0.9" cy="0.95" r="0.6">
+      <stop offset="0" stop-color="#7C5CFF" stop-opacity="0.24"/>
+      <stop offset="1" stop-color="#7C5CFF" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1600" height="900" fill="#0A0B10"/>
+  <rect width="1600" height="900" fill="url(#dots)"/>
+  <rect width="1600" height="900" fill="url(#g1)"/>
+  <rect width="1600" height="900" fill="url(#g2)"/>
+<text x="110" y="128" font-family="Inter, sans-serif" font-size="20" font-weight="700" letter-spacing="4" fill="#8A90A2">ME</text>
+<rect x="110" y="148" width="760" height="96" fill="#12141B" stroke="#262A36"/>
+<text x="146" y="210" font-family="DejaVu Sans Mono, monospace" font-size="40" fill="#F4F5F7">make game. dungeon. go</text>
+
+<text x="330" y="318" font-family="Inter, sans-serif" font-size="20" font-weight="700" letter-spacing="4" fill="#C8F542">EAZYPROMPTIN</text>
+<rect x="330" y="338" width="1160" height="252" fill="#12141B" stroke="#262A36"/>
+<rect x="330" y="338" width="8" height="252" fill="#C8F542"/>
+<text x="376" y="404" font-family="DejaVu Sans Mono, monospace" font-size="34" fill="#C8F542" font-weight="bold">my read:</text>
+<text x="376" y="404" font-family="DejaVu Sans Mono, monospace" font-size="34" fill="#F4F5F7"><tspan dx="190">couch co-op roguelite with</tspan></text>
+<text x="376" y="458" font-family="DejaVu Sans Mono, monospace" font-size="34" fill="#F4F5F7">your friends, 20-min runs, runs on</text>
+<text x="376" y="512" font-family="DejaVu Sans Mono, monospace" font-size="34" fill="#F4F5F7">your laptop, ~10 h a week.</text>
+<text x="376" y="562" font-family="DejaVu Sans Mono, monospace" font-size="26" fill="#9B7BFF">assuming you hate grinding. right?</text>
+
+<text x="110" y="646" font-family="Inter, sans-serif" font-size="20" font-weight="700" letter-spacing="4" fill="#8A90A2">ME</text>
+<rect x="110" y="666" width="560" height="96" fill="#12141B" stroke="#262A36"/>
+<text x="146" y="728" font-family="DejaVu Sans Mono, monospace" font-size="40" fill="#F4F5F7">...how did you know</text>
+
+<text x="1084" y="708" font-family="Inter, sans-serif" font-size="64" font-weight="800" letter-spacing="-2" fill="#F4F5F7">eazy<tspan fill="#C8F542">promptin</tspan></text>
+<text x="1490" y="752" text-anchor="end" font-family="DejaVu Sans Mono, monospace" font-size="22" fill="#8A90A2">npx skills add justinjd00/eazypromptin</text>
+<rect x="1342" y="800" width="100" height="5" fill="#C8F542"/><rect x="1450" y="800" width="40" height="5" fill="#9B7BFF"/>
+</svg>
