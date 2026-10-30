@@ -14,7 +14,18 @@ Three artefacts, each with a different job:
 
 In an agent session with file access write them to `.prompt-coach/<project-slug>/` (or into the project's `docs/` if the person prefers). In chat, deliver them in the reply as three clearly headed code blocks, or as a document if the interface supports that.
 
-Why three files instead of one giant prompt: agents do their best work on one clearly scoped step at a time with the full picture available for reference. A 400-line prompt asking for everything at once yields a shallow version of everything.
+Why three files instead of one giant prompt: agents do their best work on one clearly scoped step at a time with the full picture available for reference. A 400-line prompt asking for everything at once yields a shallow version of everything. And why a written spec instead of the chat history: agents given the full target up front stay far more faithful than agents fed requirements bit by bit, and a persistent spec file that every milestone refers back to recovers most of that gap.
+
+## Compiling rules
+
+These come straight from what measurably helps or hurts agents:
+
+1. **Select, don't dump.** Long requirement lists degrade compliance. Models already get format and obvious conventions right; they get *conditional* requirements ("if X then Y"), edge cases, priorities and non-defaults wrong. Spend the brief's words there and cut the rest.
+2. **Spec vs. plan.** `BRIEF.md` says *what* and *why* (stable). `MILESTONES.md` says *how* and in what order (short-lived). Keep implementation detail (class names, library versions beyond the chosen stack) out of the brief; it goes stale fast.
+3. **Contracts, not adjectives.** Acceptance criteria as: *given* a situation, the result *must* …, *must never* …, and invalid input is handled by …. "Feels good" becomes "dash covers 3 tiles in 0.15 s; the person confirms it feels right at the M0 check".
+4. **Assumptions are visible.** Every inferred or assumed item carries 🔶 and a reason. Put the assumptions with the biggest impact at the top so the person reads them.
+5. **No overview the agent can read itself.** Don't describe the repo structure, the framework or the language to a coding agent. Do state non-obvious conventions, exact commands, forbidden actions and gotchas.
+6. **Include the audit result** as one line at the top of the brief ("Executor audit: 2 remaining assumptions, see §7").
 
 ---
 
@@ -42,6 +53,9 @@ Anti-goals: <what it must not become>
 
 ## 4. Experience
 <domain sections from the playbook: core loop / flows / pages / content / look & feel>
+
+## 4b. Rules & edge cases
+<the conditional behaviour: "if X happens, then Y"; error handling; limits; conflicts between goals and which one wins>
 
 ## 5. Tech & constraints
 <platform, stack, engine, hosting, budget, time, person's skills, must-use / must-avoid>
@@ -98,8 +112,10 @@ You are building <project> with <person/team>. The full brief is in <path>/BRIEF
 **Goal:** <one sentence>
 **Build:** <bullets>
 **Not yet:** <what to leave out even if tempting>
-**Done when:** <observable, checkable criteria>
-**Verify:** <commands / manual test script>
+**Spec sections:** <which BRIEF.md sections this milestone implements>
+**Done when:** <contract-style, observable criteria>
+**Verify:** <write failing tests from the criteria first where possible, then implement; commands / manual test script>
+**Drift check:** <compare the diff against the referenced spec sections and report any deviation before marking done>
 
 ## M1: …
 ```

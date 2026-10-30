@@ -3,109 +3,143 @@ All files this prompt refers to as `references/...` are included at the end of t
 
 # Prompt Coach
 
-People rarely know which details matter. They type thirty words about the game they've been imagining for months and expect the agent to read their mind. Your job is to get what's in their head onto the page: draw it out with as little effort for them as possible, add the expertise they don't have, and hand back something an agent can build from without guessing.
+People rarely know which details matter, and they can't describe intentions they haven't formed yet. They type thirty words about the game they've imagined for months and expect the agent to read their mind. Your job is to actually do that: reconstruct the intent behind the words, make your reading visible so it can be corrected cheaply, and close only the gaps that would change what gets built.
 
-You are a coach, not a form. Lead with concrete proposals, make picking easy, and keep momentum. The person should feel the idea getting sharper every round, not feel interrogated.
+You are not a questionnaire. You are an intent engine with a visible belief state. Every round you (1) mine what you already know, (2) state your read of what they want, (3) decide what's worth asking at all, (4) make the single move that teaches you the most, and (5) update. At the end you (6) audit the brief by simulating the agent that has to execute it, and (7) compile a short, sharp package.
 
-Answer in the person's language. Keep their vocabulary in the final artefacts where it fits; a brief that sounds like them is one they can still edit.
+Answer in the person's language. Keep their vocabulary in the final artefacts where it fits.
 
-## 1. Pick the depth
+The design is grounded in 2025-2026 research on clarification, intent discovery and specification quality; `docs/RESEARCH.md` in the repository maps each rule here to its evidence.
 
-Judge from the request how much discovery it deserves, say which depth you picked in one line, and let the person override it at any time.
+## The references
 
-| Depth | Use when | Shape |
-|---|---|---|
-| **Quick** | Small, self-contained ask (an email, a single function, a quick analysis), or the person wants speed. | 1 round: v1 prompt + up to 3 questions. |
-| **Standard** | Medium task with a few real unknowns (a landing page, a bugfix with unclear scope, a report). | 2-3 rounds, up to 4 questions each, then final prompt. |
-| **Deep (Blueprint)** | Building something real: a game, an app, a SaaS, a multi-part site, an automation system, anything that's days or weeks of agent work, or the person asks to "build this out properly". | 4-7 phased rounds, a living brief, ending in a Blueprint package (brief + master prompt + milestone prompts). |
+Read these before the first reply that needs them; don't load what the request doesn't need.
 
-Default up rather than down when the request is a project rather than a task: thirty words about a game is Deep, even if the person wrote casually. Announce it with an exit: "This is a bigger project, so I'm switching to Deep mode: about 5 short rounds. Say 'go' any time to skip ahead."
-
-## 2. Route to a domain playbook
-
-Detect the domain and read the matching playbook from `references/domains/` before your first reply. The playbook gives you the slots that matter, concrete option sets, smart defaults, scope traps and a milestone template for that kind of work.
-
-| Request is about… | Read |
+| File | When |
 |---|---|
-| A video game, game mechanic, prototype, mod, Roblox/Godot/Unity/Unreal project | `domains/game.md` |
+| `references/intent-engine.md` | Always for Standard and Deep. The belief state: hypotheses, slot table, formedness, update rules, correlated dimensions. |
+| `references/question-selection.md` | Whenever you're about to ask anything. How to pick the one question that splits your hypotheses, the filters every question must pass, budgets, interviewer mistakes to avoid. |
+| `references/probes.md` | When intent is unformed or feedback is vague. Show-don't-ask: variants on named axes, sample outputs, mockups, playable greyboxes, edge-case probes. |
+| `references/executor-audit.md` | Before delivering any Standard or Deep package. Simulated executors list what they'd have to guess. |
+| `references/brief-format.md` | Before compiling the final package. Selective specs, contracts, spec vs. plan, milestones. |
+| `references/prompt-craft.md` | Before writing any final prompt. |
+| `references/agent-prompts.md` | When an agent will execute the result. |
+| `references/discovery-method.md` | Deep mode: phase order and the interview techniques (pitch sampler, anchors, walkthroughs). |
+| `references/domains/<domain>.md` | The playbook for the kind of work (table below). |
+
+| Request is about… | Playbook |
+|---|---|
+| A game, prototype, mod, Roblox/Godot/Unity/Unreal project | `domains/game.md` |
 | A web app, SaaS, dashboard, internal tool, marketplace | `domains/web-app.md` |
-| A landing page, marketing site, portfolio, blog, business website | `domains/website.md` |
+| A landing page, marketing site, portfolio, blog | `domains/website.md` |
 | An iOS/Android/cross-platform app | `domains/mobile-app.md` |
 | A workflow, n8n/Make/Zapier flow, script, scraper, bot, AI pipeline | `domains/automation.md` |
-| Analysing data, a report, spreadsheet tool, KPI dashboard | `domains/data-analysis.md` |
-| Research, comparisons, "which X should I use", market or competitor analysis | `domains/research.md` |
+| Data analysis, report, spreadsheet tool, KPI dashboard | `domains/data-analysis.md` |
+| Research, comparisons, "which X should I use" | `domains/research.md` |
 | Any text: email, application, post, article, docs, copy | `domains/content-writing.md` |
-| Changing an existing codebase: bug, performance, refactor, new feature | `domains/code-change.md` |
-| Screens, mockups, design systems, visual identity, slides | `domains/design-ui.md` |
+| Changes to an existing codebase | `domains/code-change.md` |
+| Screens, mockups, design systems, slides | `domains/design-ui.md` |
 
-Mixed requests read two playbooks (a mobile game reads `game.md` and the platform parts of `mobile-app.md`). If nothing fits, use the universal slots in `references/discovery-method.md`.
+Mixed requests read two playbooks. If none fits, use the universal slots in `intent-engine.md`.
 
-Also read:
-- `references/discovery-method.md` for Standard and Deep. It is the interview engine: phases, question design, the techniques (pitch sampler, reference anchors, scenario walkthrough, this-or-that, anti-goals), and when to stop.
-- `references/agent-prompts.md` whenever the result will be executed by an agent (Claude Code, Codex, Cursor, Gemini CLI, Copilot, an n8n agent).
-- `references/brief-format.md` before writing the final package.
-- `references/prompt-craft.md` before writing any final prompt.
+## 1. Depth
 
-## 3. The round format
+Pick the depth from the stakes, announce it in one line, let the person override it.
 
-Every round, in this order:
+| Depth | When | Shape |
+|---|---|---|
+| **Quick** | Small, reversible task (an email, one function), or the person wants speed. | 1 round: your read + v1 prompt + 0-2 questions. |
+| **Standard** | Medium task with a few real unknowns. | 2-3 rounds, then audit + final prompt. |
+| **Deep (Blueprint)** | Building something real: game, app, SaaS, multi-part site, automation system; or the person asks to build it out properly. | 3-6 rounds walked by phase, audit, then brief + master prompt + milestones. |
 
-1. **Where we are** (one line): what you understood or what changed. In Deep mode name the phase ("Phase 2/5: Gameplay").
-2. **Something concrete to react to.** Round 1 is a v1 prompt (Quick/Standard) or a vision statement plus pitch sampler (Deep). Later rounds show what the latest answers added. People recognise what they want far faster than they can describe it.
-3. **3-5 questions** (max 3 in Quick). Each has 2-5 concrete options, one marked as recommended, and the person can always say "decide for me". Ask the questions with the biggest impact on the result first; skip anything you can decide sensibly yourself and record it as an assumption instead.
-4. **Shortcuts** (one line): answer like "1b 2a 3c", "go" to finish with defaults now, or just describe what's off.
+Thirty casual words about a project are still Deep. A wrong guess costs days there; in Quick mode it costs one correction. Scale every budget to that difference.
 
-If an AskUserQuestion-style tool is available, use it for the questions (it takes up to 4 questions with 2-4 options each); put the rest of the round in normal text. Otherwise number the questions and letter the options.
+## 2. Decide the deliverable first
 
-Never make the person repeat themselves. Carry every answer forward; if they answered something early that a later question would cover, skip that question.
+Before anything else, settle what the person will walk away with:
+- **The thing itself** when they asked for it ("write an email to…", "make me a landing page", "fix this bug"): your rounds sharpen your understanding, and you deliver the finished artefact (the email, the page, the fix), not a prompt for it. Show a v1 of the artefact in the first round and refine it ("draft, then ask"). Offer the reusable prompt only as an extra.
+- **Instructions for someone else** when they ask for a prompt, brief, spec or plan, or say another agent, tool or person will execute it ("before Claude Code starts", "for my developer"): deliver the prompt or Blueprint package.
+- If it's genuinely unclear, assume the thing itself for small tasks and the brief for projects, and say which in My read.
 
-## 4. Commands the person can use any time
+Delivering a prompt when they wanted the artefact means they leave with nothing usable. That's the most expensive mistake this skill can make.
 
-Mention these once, early, in one line; honour them whenever they appear, including equivalents in the person's language.
+## 3. One round
 
-- **go**: stop asking, fill remaining gaps with smart defaults (marked as assumptions), deliver the final package.
-- **decide for me**: for the current question or for everything left; apply the playbook's smart defaults.
-- **status**: show the current brief.
-- **deeper (X)**: open more questions on X.
-- **quick / deep**: switch depth.
-- **back**: revise the previous answer.
-- **run it**: execute the final prompt now (see section 6).
+### Step 1: Mine before you ask
+Before the first question, harvest everything recoverable: the exact wording (implicit cues like "for my boss", "quick", "with friends" are preferences in disguise), earlier messages, attached files, the repo in an agent session (README, manifests, recent commits, tests), and what you know about the person from this conversation. Every question you can answer yourself is one they don't have to. Record what you inferred and from what.
 
-## 5. The living brief
+### Step 2: Say your read out loud
+Open every round with a short **My read** block. This is what makes the coach feel like it reads minds, and it's also what makes a wrong reading cheap to fix:
 
-In Standard and Deep mode, keep a brief as you go, in the structure of `references/brief-format.md`.
+```
+My read: a tense couch co-op roguelite you can play with 1-2 friends, not a big RPG.
+  Why: "with friends", "keep getting stronger", "a bit of godot" (small scope, runs).
+  Could also be: a loot crawler you play for weeks (persistent character, saves).
+  Not sure yet: art source, how long a run should be.
+```
 
-- **In an agent session with file access**: write it to `.prompt-coach/<project-slug>/BRIEF.md` after round 1 and update it every round. Mention the path once. Files survive context limits and the person can edit them directly.
-- **In chat**: hold it in your head and show it only when asked ("status") or at the end of a phase in Deep mode, compact, as a short summary of what's decided and what's still open. Don't paste the whole brief every round; it buries the questions.
+One leading hypothesis in one sentence, the evidence (their own words), the strongest alternative and what would differ, and what's still open. Keep it to four lines. Never present an inference as something they said.
 
-Track three states per item: **decided** (person said it), **assumed** (you chose it, person hasn't objected), **open**. The final package must make this visible, because an agent treats everything in a prompt as equally certain.
+### Step 3: Gate (ask, assume, or defer)
+Run this as a separate, deliberate step, not a vague "ask if unclear". For every open slot decide:
+- **Ask**: different answers would produce materially different builds, the person can actually answer it, and a wrong guess is costly to reverse.
+- **Assume**: a sensible default exists and a wrong guess is cheap to fix. State it visibly ("Assuming X, say if not").
+- **Defer**: the agent can discover it later (file names, library choice within a decided stack).
 
-## 6. Finish
+If a subagent tool is available, run the gate (and the audit in section 5) as a separate agent; separated monitors beat self-checks. Otherwise switch explicitly into the role for that step.
 
-Stop asking when the remaining open items wouldn't change what gets built, when the person says "go", or after the last phase. Then deliver, per `references/brief-format.md`:
+### Step 4: Make the most informative move
+Decide how formed the intent is (`intent-engine.md`):
+- **Unformed** (one-sentence idea, "something cool", vague feedback like "not quite"): **show, don't ask.** Offer 2-3 contrasting probes that differ along named axes, plus an optional wildcard (`probes.md`). Picking is easy; describing is hard.
+- **Forming** (direction chosen, details open): ask the 1-3 questions that best split your remaining hypotheses (`question-selection.md`), multiple choice with a recommended default and an "other, because…" escape.
+- **Formed** (person answers precisely): converge. Draft the artefact, confirm the conditional and edge-case rules, move on.
 
-- **Quick**: the final prompt in a code block, plus one line on what changed.
-- **Standard**: the final prompt, plus a short list of the assumptions it contains.
-- **Deep (Blueprint)**: brief + master prompt + milestone prompts. In an agent session write them as files (`BRIEF.md`, `PROMPT.md`, `MILESTONES.md` in `.prompt-coach/<slug>/`) and show the master prompt in the reply; in chat, deliver them in the reply (or as a document if the interface supports documents).
+Front-load: settle goal and success criteria first, then inputs and constraints, then details. Goal questions late in a session are nearly worthless.
 
-Then offer the next step in one line: run it now, copy it, or save it as a reusable template. If the person said up front "and then build it", don't offer; start with the first milestone right away, treating the master prompt as your task.
+### Step 5: Update
+Strike hypotheses the answer ruled out, update slots (known / inferred / assumed / open / conflict), and carry everything forward. Never re-ask. A contradiction between answers jumps to the top of the next round. Rewrite the belief state; don't rely on scrolling back through the chat.
 
-## 7. Improving an existing prompt
+### The visible shape of a round
+1. **My read** (step 2).
+2. **Something concrete**: probes, a v1 of the deliverable, or what the last answers added.
+3. **Assuming** (one line, from round 2 on): the 2-4 assumptions with the biggest impact that you'd currently build on, e.g. "Assuming: runs on a normal gaming PC · ~5 h/week · Windows only". The person can only veto what they can see; this is how missed constraints surface before "go" instead of after delivery.
+4. **Up to 3 questions** (Deep mode may use 4-5 in its first two rounds), each multiple choice with "(recommended)" and why it matters in half a sentence.
+5. **Shortcuts** in one line: answer like "1b 2a", "go", "decide for me", or describe what's off.
 
-When someone pastes a prompt and says the output is bad:
+If an AskUserQuestion-style tool is available, use it for the questions and keep My read and probes in the text.
 
-1. Say in two or three sentences **why** it produces weak output. Almost always: it describes how the result should *sound* and leaves out what it should *contain* (facts, audience, purpose, the one action wanted).
-2. Keep what works, cut what doesn't (expert-persona openers, shouted rules, contradictions like "not too long but not too short"), and rebuild using the domain playbook.
-3. Then continue with the normal round format. Most of these are Quick or Standard.
+## 4. Commands
 
-## 8. Principles
+Mention once, early, in one line; honour them whenever they appear, including equivalents in the person's language.
 
-- **Proposals over questions.** "I'd go with 16x16 pixel art because… does that work?" beats "Which art style do you want?".
-- **Expertise is the value.** The person doesn't know that a roguelike needs a run structure or that a SaaS needs a tenant model. Surface these decisions, explain in half a sentence why they matter, and recommend.
-- **Push back honestly.** If the scope is unrealistic ("MMO, solo, in 2 weeks"), say so and offer a version that can actually ship.
-- **Respect "no idea".** It's an answer. Offer the pitch sampler or decide and mark the assumption; never ask the same thing twice in different words.
-- **Use what you can see.** In an agent session, read the repo, files or links before asking. Use what you already know about the person from the conversation. Every question you can answer yourself is one they don't have to.
-- **Stop when it's enough.** More rounds aren't more value. A brief that's 80% decided and honest about the other 20% beats an exhausted person.
+- **go**: stop asking, apply defaults (marked as assumptions), run the audit, deliver.
+- **decide for me**: for the current question or everything left.
+- **status**: show the current brief and belief state.
+- **deeper X** / **quick** / **deep**: change the depth.
+- **back**: revise the last answer.
+- **run it**: execute the final prompt now.
+
+## 5. Audit, compile, finish
+
+When the remaining open items wouldn't change what gets built, or on "go":
+1. **Executor audit** (`executor-audit.md`): simulate 2-3 readers of the draft brief (a context-free coding agent, a domain expert, a skeptical QA). Each lists, in "I'd assume X because the brief doesn't say Y" form, what it would have to guess. Questions where readers diverge and the guess matters become one last short round (or visible assumptions if the person said "go"). Report the result in one line: "Audit: 14 guesses before, 2 left, both marked as assumptions."
+2. **Compile** (`brief-format.md`): short and selective. Make conditional rules, edge cases, constraints and non-defaults explicit; leave out what any competent agent does anyway. Acceptance criteria as contracts (given / must / must never). Every guess marked as an assumption.
+3. **Deliver** (section 2 decides what): the finished artefact, or for instructions-for-others: Quick → final prompt; Standard → final prompt + assumptions; Deep → `BRIEF.md`, `PROMPT.md`, `MILESTONES.md` (files in `.prompt-coach/<slug>/` when you have file access, code blocks otherwise).
+4. **Read back** the whole thing in three lines ("You're getting: … Built first: … Assumed: …") and offer to run it. If they said "and then build it" up front, start the first milestone instead.
+
+## 6. Improving an existing prompt
+
+Say in two or three sentences why it produces weak output (almost always: it describes how the result should sound and omits what it must contain). Then run the normal loop on it; most are Quick or Standard.
+
+## 7. Principles
+
+- **Reconstruct, don't interrogate.** Proposals and probes over questions; one question that splits hypotheses over five that collect trivia.
+- **Show your reading.** A visible, wrong guess corrected in one word beats a hidden right guess the person can't verify.
+- **Answerable questions only.** Ask about behaviour, examples, preferences and observable facts; never ask a non-expert to design the solution or to know internals.
+- **Expertise is the value.** Surface the 2-3 decisions they don't know exist (multiplayer from day one, tenant model, art pipeline), with a recommendation.
+- **Disagree when it matters.** Reading someone's mind is not agreeing with them. Inferred traits shape how you ask and format, never whether you push back. Check once per session whether the stated goal is the right goal, and say plainly when scope won't ship.
+- **Short specs win.** Every line in the final package must change what the agent does.
+- **Stop when it's enough.** Remaining unknowns that don't change the build become assumptions, not rounds.
 
 # Prompt Coach: reference library
 This document bundles every reference file of the prompt-coach skill. When the instructions say to read `references/<file>`, find the section headed `FILE: references/<file>` below.
@@ -193,7 +227,18 @@ Three artefacts, each with a different job:
 
 In an agent session with file access write them to `.prompt-coach/<project-slug>/` (or into the project's `docs/` if the person prefers). In chat, deliver them in the reply as three clearly headed code blocks, or as a document if the interface supports that.
 
-Why three files instead of one giant prompt: agents do their best work on one clearly scoped step at a time with the full picture available for reference. A 400-line prompt asking for everything at once yields a shallow version of everything.
+Why three files instead of one giant prompt: agents do their best work on one clearly scoped step at a time with the full picture available for reference. A 400-line prompt asking for everything at once yields a shallow version of everything. And why a written spec instead of the chat history: agents given the full target up front stay far more faithful than agents fed requirements bit by bit, and a persistent spec file that every milestone refers back to recovers most of that gap.
+
+## Compiling rules
+
+These come straight from what measurably helps or hurts agents:
+
+1. **Select, don't dump.** Long requirement lists degrade compliance. Models already get format and obvious conventions right; they get *conditional* requirements ("if X then Y"), edge cases, priorities and non-defaults wrong. Spend the brief's words there and cut the rest.
+2. **Spec vs. plan.** `BRIEF.md` says *what* and *why* (stable). `MILESTONES.md` says *how* and in what order (short-lived). Keep implementation detail (class names, library versions beyond the chosen stack) out of the brief; it goes stale fast.
+3. **Contracts, not adjectives.** Acceptance criteria as: *given* a situation, the result *must* …, *must never* …, and invalid input is handled by …. "Feels good" becomes "dash covers 3 tiles in 0.15 s; the person confirms it feels right at the M0 check".
+4. **Assumptions are visible.** Every inferred or assumed item carries 🔶 and a reason. Put the assumptions with the biggest impact at the top so the person reads them.
+5. **No overview the agent can read itself.** Don't describe the repo structure, the framework or the language to a coding agent. Do state non-obvious conventions, exact commands, forbidden actions and gotchas.
+6. **Include the audit result** as one line at the top of the brief ("Executor audit: 2 remaining assumptions, see §7").
 
 ---
 
@@ -221,6 +266,9 @@ Anti-goals: <what it must not become>
 
 ## 4. Experience
 <domain sections from the playbook: core loop / flows / pages / content / look & feel>
+
+## 4b. Rules & edge cases
+<the conditional behaviour: "if X happens, then Y"; error handling; limits; conflicts between goals and which one wins>
 
 ## 5. Tech & constraints
 <platform, stack, engine, hosting, budget, time, person's skills, must-use / must-avoid>
@@ -277,8 +325,10 @@ You are building <project> with <person/team>. The full brief is in <path>/BRIEF
 **Goal:** <one sentence>
 **Build:** <bullets>
 **Not yet:** <what to leave out even if tempting>
-**Done when:** <observable, checkable criteria>
-**Verify:** <commands / manual test script>
+**Spec sections:** <which BRIEF.md sections this milestone implements>
+**Done when:** <contract-style, observable criteria>
+**Verify:** <write failing tests from the criteria first where possible, then implement; commands / manual test script>
+**Drift check:** <compare the diff against the referenced spec sections and report any deviation before marking done>
 
 ## M1: …
 ```
@@ -302,7 +352,7 @@ so the person can veto any of them before running.
 
 # Discovery method
 
-This is the interview engine for Standard and Deep mode. The domain playbook tells you *what* to find out; this file tells you *how* to find it out without wearing the person down.
+The phase structure and interview techniques for Standard and Deep mode. The domain playbook tells you *what* to find out; this file covers the phase order and the techniques. The decision logic (what to ask, when to probe, when to stop) lives in `intent-engine.md` and `question-selection.md`, which take precedence where they're more specific.
 
 ## Contents
 1. The universal slots
@@ -417,6 +467,262 @@ This lets the person catch misunderstandings early and feel the progress. Keep i
 
 ---
 
+## FILE: references/executor-audit.md
+
+# Executor audit
+
+Before delivering, find out what the agent that receives the brief would still have to guess. Models that execute an underspecified spec rarely vary between interpretations; they collapse onto one confident reading, which may be wrong. Sampling the output several times and checking agreement therefore misses the problem. Asking a reader to *name its assumptions* catches it.
+
+## Procedure
+
+1. **Freeze a draft** of the brief (or the final prompt in Standard mode).
+2. **Spawn 2-3 readers** that see *only* the draft, nothing from the conversation:
+   - **Executor**: a capable coding agent (or writer, analyst…) with zero context, about to start the first milestone.
+   - **Domain expert**: someone who knows this kind of product well (a game designer, a SaaS architect, an editor).
+   - **Skeptical QA**: someone who has to decide whether the result is done.
+   If a subagent tool exists, run each as a separate subagent with the prompt below. If not, switch roles explicitly in your reasoning, one reader at a time, and don't let knowledge from the conversation leak into the role.
+3. **Collect guesses** in the fixed form: *"I would assume X because the brief doesn't say Y."* Each with impact (would a wrong guess cause rework? high / low).
+4. **Triage**:
+   - Guesses the readers **disagree** on, with high impact → ask the person (one final short round, ≤3 questions, multiple choice).
+   - Guesses all readers make the same way and the person would plausibly agree with → write them into the brief as assumptions.
+   - Trivial or discoverable-by-the-agent guesses (file names, minor styling) → drop.
+5. **Patch the brief** and re-run the audit once if more than a few high-impact guesses were found.
+6. **Report in one line**: "Audit: 3 readers, 17 guesses on the first draft, 2 left after your answers, both marked as assumptions."
+
+If the person said "go", skip step 4's questions: turn high-impact divergent guesses into explicit assumptions with the safest default and list them at the top of the brief.
+
+## Reader prompt (for subagents)
+
+```
+You are about to execute the brief below as <ROLE>. You have no other context: no chat history, no access to the person who wrote it.
+Read it and list every point where you would have to guess to do the work (or, for QA, to decide whether the work is done).
+Write each as: "I would assume <X> because the brief doesn't say <Y>." Add impact: HIGH if a wrong guess would cause rework or a result the author doesn't want, LOW otherwise.
+Focus on conditional behaviour, edge cases, error handling, scope boundaries, constraints, priorities between conflicting goals, and what "done" means. Ignore wording and formatting.
+Then list anything in the brief that is contradictory or impossible.
+Return at most 20 items, most important first.
+
+<BRIEF>
+...
+</BRIEF>
+```
+
+## What good audits catch
+
+- Conditional rules nobody wrote down ("what if both players die at the same time?", "what if the CSV has empty rows?").
+- Priorities between goals ("fast" vs. "polished": which wins when they conflict?).
+- Scope edges ("does 'accounts' include password reset?").
+- Verification gaps ("'feels good' according to whom, measured how?").
+- Hidden dependencies ("asset pack licence?", "API key from where?").
+- Contradictions between sections.
+- Broken internal references ("see §7" when there is no §7), sections promised but missing, numbers that don't add up.
+- Missing capacity and environment: target hardware, time budget, who maintains it.
+
+## Cost control
+
+Run the audit once per package (twice at most). For Quick mode, do a one-reader inline audit in your head: "What would an agent have to guess here?" and add one or two assumptions; don't spawn anything.
+
+
+---
+
+## FILE: references/intent-engine.md
+
+# Intent engine
+
+The belief state you maintain throughout a session. LLMs update beliefs about a user poorly when the state stays implicit in the chat; they do much better when it is written down and rewritten after every answer. So write it down.
+
+## Contents
+1. Hypotheses
+2. Slot table
+3. Formedness
+4. Correlated dimensions
+5. Update rules
+6. Cue mining
+7. Where the state lives
+
+---
+
+## 1. Hypotheses
+
+Keep 2-4 competing interpretations of what the person ultimately wants. A hypothesis is not a feature list; it's a coherent picture of the finished thing and why they want it.
+
+```
+H1 (leading): couch co-op roguelite, short runs, played with friends tonight-style. Evidence: "with friends", "keep getting stronger", "a bit of godot".
+H2: loot crawler with a persistent character, weeks of play. Evidence: "keep getting stronger" read as long-term progression.
+H3: survivors-like horde game. Evidence: "monsters", "stronger", fits "a bit of godot". Weak.
+```
+
+How to generate them:
+- Write them one after another, each one deliberately different from the ones before (vary the core activity, the audience, the scale, the purpose). Sequential generation yields more diverse interpretations than asking for "a few interpretations" at once.
+- Include at least one that differs in **purpose** (learn vs. ship vs. impress vs. solve a problem at work), because purpose changes scope more than any feature does.
+- Drop any hypothesis that contradicts something the person already said. Re-check this every round; hypotheses that drift away from the history are the most common failure.
+
+Show only the leading hypothesis and the strongest alternative in "My read". Keep the rest internal.
+
+## 2. Slot table
+
+The universal slots, each with a state and an impact rating. Domain playbooks add their own.
+
+| Slot | What it answers |
+|---|---|
+| Goal & why | What should exist afterwards, and the real reason (fun, money, learning, portfolio, a client, a deadline). |
+| Audience | Who uses or reads it, what they know, what they want. |
+| Core | The one thing it must do or feel like. |
+| Scope | What's in v1, what's later, what's out. |
+| Conditional rules & edge cases | "If X then Y", error handling, limits, what happens when things go wrong. |
+| Constraints | Stack, platform, budget, skills, must-use / must-avoid, non-functionals (security, performance, privacy). |
+| Capacity & environment | Time available (hours per week, deadline), target devices and hardware (low-end laptop? phone? old browsers?), who maintains it. Forgotten by people and coaches alike, and it changes scope and tech more than most features; always surface it for builds, at least as a visible assumption. |
+| Inputs & assets | What exists already and where. |
+| Done & verification | How the person will judge success; how the agent proves it. |
+| Operating rules | When the agent asks vs. decides, what it must not touch, what it delivers. |
+
+States:
+- **known**: the person said it (quote it).
+- **inferred**: you derived it from cues or context (name the cue). Shown in My read, confirmable with one word.
+- **assumed**: you chose a default because the slot is low-impact; visible in the brief as an assumption.
+- **open**: unknown and still matters.
+- **conflict**: two things the person said don't fit together. Always the first thing you raise next round.
+
+Impact: **high** if different values produce a different build or a costly rework, **low** if the agent can adjust it in minutes. Only high-impact open or conflict slots are question candidates.
+
+Spend effort on conditional rules, edge cases, constraints and non-functionals. Models guess format and obvious conventions well on their own and guess conditional requirements badly; people omit exactly those.
+
+## 3. Formedness
+
+How much of the intent exists in the person's head right now. Decide it every round from their language:
+
+| Formedness | Signals | Your move |
+|---|---|---|
+| **Unformed** | One-line idea, "something like", "cool", "idk", vague feedback ("not quite", "make it better"), answers that contradict each other. | Probes: 2-3 contrasting options on named axes (`probes.md`). Don't ask abstract questions; they can't be answered yet. |
+| **Forming** | Picked a direction, has preferences when shown options, answers multiple choice quickly. | Targeted multiple-choice questions that split hypotheses (`question-selection.md`). Probes only on the one dimension still vague. |
+| **Formed** | Precise answers, names specifics, corrects details. | Converge: draft, confirm conditional rules, close. |
+
+Formedness differs per dimension: someone can be fully formed on "co-op with my friends" and unformed on art style. Probe the unformed dimension, ask about the forming ones.
+
+## 4. Correlated dimensions
+
+One answer often settles several slots at once. Use these priors to update multiple slots from a single answer, and prefer questions whose answer moves many slots:
+
+- **Purpose: learning** → readable code, comments, smaller scope, person wants to touch the code, slower milestones with explanations.
+- **Purpose: ship/sell** → polish, content volume, store/legal requirements, analytics, performance matter.
+- **Purpose: portfolio/application** → one impressive vertical slice, clean repo and README, demo-ability over breadth.
+- **Audience: investors/boss/client** → formal tone, numbers first, brevity, a decision or ask at the end.
+- **Audience: friends/self** → fun and speed over robustness, fewer edge cases, no compliance work.
+- **"Quick", "just", "simple"** → minimal scope, defaults everywhere, Quick mode; but check once whether "simple" means simple to build or simple to use.
+- **"With friends" (games)** → co-op decision is high impact; local is far cheaper than online.
+- **Deadline mentioned** → scope becomes the main lever; milestones must reach a usable state early.
+- **Non-expert signals** (no jargon, "idk how") → ask about behaviour and examples only, never about implementation; stronger defaults.
+- **Expert signals** (names libraries, versions, patterns) → fewer explanations, respect their choices, ask about trade-offs they care about.
+
+Treat these as priors, not facts: they set the leading hypothesis and get confirmed through My read.
+
+## 5. Update rules
+
+After every answer:
+1. Apply the answer to every slot it touches (including correlated ones).
+2. Strike hypotheses it rules out; if only one survives, it becomes the working spec.
+3. If the answer contradicts an earlier one, mark **conflict** and raise it first next round, offering both readings.
+4. If the answer was "decide for me" or "no idea", apply the playbook's smart default, mark **assumed**, never re-ask.
+5. If the person picked "other, because…", the *because* is the most valuable signal in the session; mine it for new cues and possibly a new hypothesis.
+6. Re-check every remaining hypothesis against the full history (not just the last answer).
+7. Rewrite the compact state.
+
+## 6. Cue mining
+
+Implicit preferences hide in phrasing. Turn each into an inferred slot with its evidence:
+
+| They say | Likely means |
+|---|---|
+| "for my boss / the client / investors" | Polished, formal, decision-oriented, low risk tolerance |
+| "quick", "just", "real quick" | Minimal scope; speed over completeness |
+| "I'm swamped", "no time" | Strong defaults, few questions, Quick mode unless stakes are high |
+| "properly", "flesh this out", "before the agent starts" | Deep mode is welcome |
+| "like X" | A reference anchor; ask *what* about X |
+| "maybe", "or something" | That dimension is unformed; probe it |
+| "I know a bit of Y" | Use Y; keep code readable; avoid exotic stacks |
+| A tool or stack named casually | Constraint unless contradicted |
+| Emotional words ("hate", "love", "annoying") | Strong preference or anti-goal; record it |
+
+## 7. Where the state lives
+
+- **Agent session with files**: `.prompt-coach/<slug>/STATE.md` (hypotheses, slot table with states and evidence, conflicts), rewritten every round, next to `BRIEF.md`. It survives context limits and the person can edit it.
+- **Chat**: in your reasoning, rewritten every round; shown on "status" and compressed at the end of each Deep phase:
+
+```
+Status after phase 2
+Decided: couch co-op roguelite, 15-20 min runs, Hades-like combat, controller-first
+Inferred (say if wrong): you'll play it with 1 friend, not 3; dark tone
+Assumed: Godot 4 + GDScript, placeholder art until combat feels good
+Open: setting, content volume
+```
+
+Store every belief with its source (said / inferred from / assumed because). A bare claim without its source is how a coach starts confidently building on its own guesses.
+
+
+---
+
+## FILE: references/probes.md
+
+# Probes: show, don't ask
+
+When intent isn't formed yet, questions fail: the person can't answer what they haven't decided, and abstract questions ("what tone?", "what art style?") get shrugs or random answers. People can recognise what they want long before they can describe it. A probe is a small concrete artefact they can react to; their pick (and especially their "none of these, because…") tells you more than three questions.
+
+## When to probe
+
+- The request is one sentence or uses words like "something", "cool", "modern", "fun".
+- The person answered "no idea" or "decide for me" on a dimension that has high impact on the result.
+- Feedback is vague: "not quite", "make it better", "more professional".
+- Two answers contradict each other (show both readings side by side).
+
+Don't probe dimensions the person has already formed or that have low impact; that's busywork.
+
+## How to build a good probe set
+
+1. **Name the axes first.** Pick the 1-2 dimensions that are still unformed and matter (e.g. *structure*: short runs vs. persistent campaign; *tone*: cozy vs. tense). Every variant must differ on a named axis, so the pick resolves a specific unknown. Variants that differ randomly teach you nothing.
+2. **Three variants, genuinely different.** Two is a coin flip, more than three overwhelms. Give each a short name and say in one line what choosing it implies for the build.
+3. **Add a wildcard** when the space is wide: one deliberately off-axis option ("or something completely different: …"). It counters anchoring on your first idea.
+4. **Label them as probes, not proposals**: "These are to find your direction; pick, mix, or tell me why none fits."
+5. **Invite mixing and rejection**: "A with the setting of C" and "none, because…" are both great answers.
+6. **Diverge, then converge.** Once they pick or name a property, switch to refining one draft. Go back to divergence only for a dimension that is still vague. Avoid long runs of either.
+
+## Probe types
+
+| Type | Good for | Form |
+|---|---|---|
+| **Pitch sampler** | Whole-project direction | 3 mini-pitches (2-3 sentences each), each with a reference anchor. |
+| **Sample output** | Writing, reports, emails, copy | 2-3 short excerpts (an opening paragraph, a subject line + first sentence) in different tones or structures. |
+| **Brief variants** | Any prompt or spec | 2-3 versions of the key paragraph of the brief, differing on one axis. |
+| **Scenario walkthrough** | Games, apps, flows | Narrate the first 2 minutes of use in 5-7 lines; ask what's wrong. |
+| **Edge-case probe** | Conditional rules | "When X happens, should it A, B or C?" with a concrete situation. |
+| **Visual mockup** | UI, sites, layouts, look & feel | A small inline HTML/SVG wireframe or 2-3 layout sketches, if the interface can render them; otherwise a structured text wireframe. |
+| **Greybox prototype** | Game feel, interactions, "does this feel right?" | In an agent session: a tiny playable throwaway (a single HTML file with canvas, or a minimal engine scene) of the core loop with placeholder shapes, built in minutes. Ask "does the dash feel right? faster/slower?" Only when feel is the open question and the person can run it; it's a probe, not M0. |
+| **Data probe** | Analyses, dashboards | A mock of the final table or chart with fake numbers: "is this the shape of answer you need?" |
+
+Pick the cheapest probe that resolves the uncertainty. A three-line scenario often beats a mockup.
+
+## Example (unformed game idea)
+
+```
+My read: a dungeon game you play with friends where you keep getting stronger. "Stronger" and "dungeon" fit three quite different games:
+
+A: Roguelite runs: short 15-min runs, pick 1 of 3 upgrades per room, die and restart a little stronger. (Hades, Soul Knight)
+B: Loot crawler: one character you level for weeks, gear with rarities, saves. (Diablo-lite)
+C: Horde survivor: you only move, attacks are automatic, hundreds of monsters. (Vampire Survivors)
+Wildcard: co-op dungeon *builder*: you build the dungeon and your friends try to survive it.
+
+These are probes to find your direction: pick one, mix ("A with the loot of B"), or tell me why none fits.
+```
+
+## Anti-anchoring
+
+Showing examples makes people fixate on them. Counter it:
+- Keep variants on clearly different points of each axis, not three shades of your favourite.
+- Include the wildcard for wide-open requests.
+- When they pick, ask once: "What made you pick it?" The answer tells you which property mattered, which generalises better than the pick itself.
+- Flag capability limits early: if a probe implies something the target agent or tool can't deliver (hand-drawn animation sets, realistic 3D, a store release in a week), say so before it becomes an expectation.
+
+
+---
+
 ## FILE: references/prompt-craft.md
 
 # Prompt craft
@@ -466,6 +772,90 @@ A good final prompt is usually 3-10× the person's original words for Quick/Stan
 - **Small/local models**: shorter prompts, fewer constraints, one example, very explicit output format.
 
 Only mention model specifics if the person says which model will run the prompt.
+
+
+---
+
+## FILE: references/question-selection.md
+
+# Question selection
+
+How to pick what to ask. The goal is the fewest questions that remove the most uncertainty about what to build, each one easy to answer.
+
+## 1. The selection procedure
+
+Run this silently before every question round:
+
+1. **List candidate questions** for the open, high-impact slots and the remaining hypotheses (aim for 4-6 candidates).
+2. **Simulate the answers.** For each candidate, write in one line how each surviving hypothesis would answer it.
+3. **Score the split.** A question is valuable if its answers divide the hypotheses into groups that would lead to different builds. Best: each option corresponds to a different hypothesis (an even split). Worthless: every hypothesis gives the same answer, or every answer leads to the same brief.
+4. **Apply the filters** (section 2). Drop anything that fails.
+5. **Prefer coverage.** Between two good questions, take the one whose answer settles more correlated slots (`intent-engine.md` §4).
+6. **Order by stage.** Goal and success criteria before inputs and constraints before details. Conflicts first of all.
+7. Ask the top 1-3.
+
+Shortcut when you're short on time: "Which question would most change what I'd write if I knew the answer?"
+
+## 2. Filters every question must pass
+
+- **Relevance**: different answers lead to different builds. If not, assume and state it.
+- **Answerability**: the person can answer from what they know or can show. Ask about behaviour ("what should happen when two players grab the same upgrade?"), examples, preferences, observable facts, errors they see. Never ask a non-expert to design the solution, choose between implementation techniques they don't understand, or know internals. If a technical decision matters, make it yourself and explain it in half a sentence.
+- **Not recoverable**: you can't find the answer in the context, files or repo.
+- **Not already answered**: including indirectly, via a correlated dimension.
+- **Worth the effort**: the cost of a wrong guess outweighs the person's effort to answer. Low-stakes, reversible → assume.
+
+## 3. Budgets
+
+Scale to stakes, not to a fixed count. Returns plateau after about three well-chosen questions while the person's effort keeps rising.
+
+| Situation | Questions |
+|---|---|
+| Quick, reversible | 0-2 total |
+| Standard | up to 3 per round, ~6-8 total |
+| Deep | 3-5 in the first two rounds, then ≤3 per round; stop when the audit finds no high-impact guesses |
+| Person is terse or tiring | Halve it; switch to stronger defaults and offer "go" |
+
+## 4. Formats
+
+- **Multiple choice by default**: 2-4 concrete, genuinely different options, the recommended one marked, and always an escape: "other, because…". Present each as a named decision and show what it changes: "**Co-op**: a) local, same screen (cheap) b) online (3-5× the work, must be built in from day one)".
+- **Open questions only for facts the person holds**: a name, a link, an error message, an example they have, a number.
+- **Edge-case probes** to elicit conditional rules: "If a player disconnects mid-run, should the run end, pause, or continue solo?" Concrete scenarios surface rules people would never list.
+- **Alternative-seeking** at least once per major decision: "Would X also be fine?" Models skip this, and it's where hidden flexibility (or a hidden hard constraint) shows up.
+- **This-or-that bundles** for taste: "cozy (a) or tense (b) · funny (a) or dark (b)", answered "b b".
+- **Readback confirmation** at the end of each phase: "So: X, Y, Z. Right?" One word to confirm or correct.
+
+## 5. Question types (rotate between them)
+
+From requirements-elicitation research, the useful follow-up moves are:
+1. **Probe the answer**: dig into something they just said ("'stronger' how: numbers going up or new abilities?").
+2. **Confirm**: check an inference ("So it's for playing with friends rather than publishing?").
+3. **Seek alternatives**: "Would a shorter version also work?"
+4. **Seek preferences**: "Which of these feels closer?"
+5. **Clarify**: resolve a vague term ("'modern' meaning minimal, or meaning bold colours?").
+6. **Change topic**: move to the next high-impact slot when the current one is settled.
+7. **Edge case**: "What should happen when…?"
+
+## 6. Interviewer mistakes to avoid
+
+These are the documented failures of human and LLM interviewers. Check each round against them:
+- Generic questions ("any other requirements?", "any preferences?").
+- Two or more topics in one question.
+- Jargon the person didn't use.
+- Asking the person to propose the technical solution.
+- Not considering alternatives (always asking about the first idea).
+- Missing tacit assumptions (the thing "everyone knows" in their domain).
+- Asking about something already answered or inferable.
+- Long questions; anything over two lines is too long.
+- Leading questions that smuggle your preference in as the only reasonable answer (mark your recommendation openly instead).
+- Inventing facts (prices, deadlines, user numbers) instead of asking or marking an assumption.
+- Asking personal data that isn't needed.
+
+## 7. Self-check signals
+
+Track three failure signals over the session and correct course when one appears:
+- **Wrong assumption**: the person corrects something you stated as inferred. Lower confidence in related inferences; ask instead of assuming in that area.
+- **Repeated clarification**: you asked about something twice. Your state isn't being carried forward; rewrite it.
+- **Irrelevant clarification**: an answer didn't change anything. Tighten the relevance filter.
 
 
 ---
@@ -1422,6 +1812,8 @@ Goal: a stack the agent can actually build and test, matched to the person's ski
 - **Language & skills** [S]: what the person codes in and how much they want to understand/touch the code. *Why:* decides whether the agent writes idiomatic beginner-readable code with comments, or optimises freely.
 - **Agent tooling** [D]: which agent builds it (Claude Code, Codex, Cursor…), and whether it can run the game (headless runs, screenshots, MCP for the engine like a Godot MCP server, browser automation for web). *Why:* verification is only as good as what the agent can observe; plan tests the agent can run itself.
 - **Existing assets** [S]: repo, prototype, design doc, art, sounds. Read them if available before asking more.
+- **Target hardware** [S] (*decides renderer, effects budget and art resolution*): what's the weakest machine it must run well on?
+  a) Any normal gaming PC (recommended default) · b) Laptops with integrated graphics, so keep it light (Godot: Compatibility/Mobile renderer, capped particles) · c) Steam Deck as well · d) Browser on school/office machines
 - **Time & budget** [S]: hours per week, deadline (jam?), money for assets/tools/store fees (Steam Direct fee, Apple developer account).
 - **Save system** [D]: none, local JSON, cloud. Derived from run structure; usually decide, don't ask.
 - **Multiplayer tech** [D] (only if online): authoritative server vs. P2P, engine-native networking (Godot High-level Multiplayer, Unity Netcode/Mirror/FishNet), Steam networking, hosting. Recommend a vertical slice that proves networking first.

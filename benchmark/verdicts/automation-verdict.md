@@ -1,0 +1,11 @@
+SCENARIO: automation
+X: coverage correct/wrong/missing = 9/0/0 of 9; unmarked_wrong = 0; executor_high_guesses = 1; elicited = 6; volunteered = 3; fit = 4
+Y: coverage correct/wrong/missing = 8/0/1 of 9; unmarked_wrong = 1; executor_high_guesses = 2; elicited = 6; volunteered = 2; fit = 3
+OVERALL: X: its brief is self-contained and covers every card item, including the hard "never pay" rule and duplicate handling that won't drop a corrected invoice, while Y's final message is a node-level JSON dump that depends on setup steps from earlier messages and never states the no-payment rule.
+DETAILS:
+- X missing/wrong: none. (Card item 1's "freelance photographer" detail never came up in either conversation and is irrelevant to the build; the substantive part, incoming supplier PDFs in Gmail from ~5 suppliers, is stated, so it is scored CORRECT for both.)
+- Y missing/wrong: MISSING "never pay anything automatically". The final message has no payment nodes but nowhere states the rule, so nothing stops a later "next step" (the earlier turn already floated bank-transaction matching).
+- X top guesses: (1) How the PDF reaches the AI step (text layer or the PDF/vision directly) and where the "confidence" value behind the <0.8 flag comes from. Scanned PDFs and the uncertainty flag depend on this, and the brief leaves it to the builder.
+- Y top guesses: (1) The trigger only fires on the Gmail label `Invoices/New`, which needs a Gmail filter defined in an earlier turn. The final message only says "the rest is unchanged", so without the conversation nothing gets picked up. Telegram bot and Mistral key setup are also only in the earlier turn. (2) The Monday summary filters on `status = open`, but the final message never says the user must set `status = paid` by hand, so paid invoices keep showing as overdue.
+- X unmarked wrong assumptions: none. Defaults (Paid checkbox, 07:00 Monday, 15-min polling, dedupe key, confidence threshold, label names) are all marked (assumed).
+- Y unmarked wrong assumptions: (1) Dedupe is a Remove Duplicates node keyed on supplier|invoice_number using execution memory, stated as fact. A reissued or corrected invoice with the same number is silently dropped, and the key is recorded before upload, so a failed upload loses the invoice without any alert. Neither risk is flagged.

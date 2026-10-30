@@ -92,6 +92,8 @@ Goal: a stack the agent can actually build and test, matched to the person's ski
 - **Language & skills** [S]: what the person codes in and how much they want to understand/touch the code. *Why:* decides whether the agent writes idiomatic beginner-readable code with comments, or optimises freely.
 - **Agent tooling** [D]: which agent builds it (Claude Code, Codex, Cursor…), and whether it can run the game (headless runs, screenshots, MCP for the engine like a Godot MCP server, browser automation for web). *Why:* verification is only as good as what the agent can observe; plan tests the agent can run itself.
 - **Existing assets** [S]: repo, prototype, design doc, art, sounds. Read them if available before asking more.
+- **Target hardware** [S] (*decides renderer, effects budget and art resolution*): what's the weakest machine it must run well on?
+  a) Any normal gaming PC (recommended default) · b) Laptops with integrated graphics, so keep it light (Godot: Compatibility/Mobile renderer, capped particles) · c) Steam Deck as well · d) Browser on school/office machines
 - **Time & budget** [S]: hours per week, deadline (jam?), money for assets/tools/store fees (Steam Direct fee, Apple developer account).
 - **Save system** [D]: none, local JSON, cloud. Derived from run structure; usually decide, don't ask.
 - **Multiplayer tech** [D] (only if online): authoritative server vs. P2P, engine-native networking (Godot High-level Multiplayer, Unity Netcode/Mirror/FishNet), Steam networking, hosting. Recommend a vertical slice that proves networking first.

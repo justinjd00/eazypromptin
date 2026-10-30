@@ -1,6 +1,6 @@
 # Discovery method
 
-This is the interview engine for Standard and Deep mode. The domain playbook tells you *what* to find out; this file tells you *how* to find it out without wearing the person down.
+The phase structure and interview techniques for Standard and Deep mode. The domain playbook tells you *what* to find out; this file covers the phase order and the techniques. The decision logic (what to ask, when to probe, when to stop) lives in `intent-engine.md` and `question-selection.md`, which take precedence where they're more specific.
 
 ## Contents
 1. The universal slots

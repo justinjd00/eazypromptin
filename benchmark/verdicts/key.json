@@ -1,0 +1,98 @@
+{
+ "key": {
+  "game": {
+   "X": "coach",
+   "Y": "default"
+  },
+  "saas": {
+   "X": "default",
+   "Y": "coach"
+  },
+  "automation": {
+   "X": "coach",
+   "Y": "default"
+  },
+  "email": {
+   "X": "default",
+   "Y": "coach"
+  }
+ },
+ "stats": {
+  "game": {
+   "coach": {
+    "user_words": 95,
+    "final_chars": 12549,
+    "assistant_total_chars": 22137
+   },
+   "default": {
+    "user_words": 119,
+    "final_chars": 11049,
+    "assistant_total_chars": 30391
+   }
+  },
+  "saas": {
+   "default": {
+    "user_words": 99,
+    "final_chars": 6473,
+    "assistant_total_chars": 24464
+   },
+   "coach": {
+    "user_words": 93,
+    "final_chars": 19268,
+    "assistant_total_chars": 30668
+   }
+  },
+  "automation": {
+   "coach": {
+    "user_words": 90,
+    "final_chars": 12186,
+    "assistant_total_chars": 21917
+   },
+   "default": {
+    "user_words": 74,
+    "final_chars": 26754,
+    "assistant_total_chars": 53382
+   }
+  },
+  "email": {
+   "default": {
+    "user_words": 64,
+    "final_chars": 1412,
+    "assistant_total_chars": 8564
+   },
+   "coach": {
+    "user_words": 87,
+    "final_chars": 3823,
+    "assistant_total_chars": 15104
+   }
+  }
+ },
+ "rerun_key": {
+  "game": {
+   "X": "default",
+   "Y": "coach21"
+  },
+  "email": {
+   "X": "coach21",
+   "Y": "default"
+  }
+ },
+ "rerun_stats": {
+  "game-default": {
+   "user_words": 119,
+   "final_chars": 11049
+  },
+  "game-coach21": {
+   "user_words": 115,
+   "final_chars": 20397
+  },
+  "email-coach21": {
+   "user_words": 91,
+   "final_chars": 1527
+  },
+  "email-default": {
+   "user_words": 64,
+   "final_chars": 1412
+  }
+ }
+}

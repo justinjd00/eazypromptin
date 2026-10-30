@@ -1,37 +1,50 @@
 # Prompt Coach
 
-**Turns a lazy 30-word prompt into a full agent brief, interactively.**
+**Reads the intent behind a lazy 30-word prompt and turns it into exactly what you meant: a finished result or a full agent brief.**
 
-You type *"I want to make a game, some dungeon thing with monsters, pixel art, for PC"*. Instead of an agent guessing its way into a generic prototype, Prompt Coach walks you through five short rounds, proposes concrete options at every step and ends with a brief, a master prompt and milestone prompts your coding agent can build from without guessing.
+You type *"i wanna make a game, some dungeon thing with monsters, pixel art, maybe with friends"*. A normal assistant either guesses or fires off a questionnaire. Prompt Coach does what a good senior colleague does: it says what it thinks you mean, shows you concrete options when you haven't decided yet, asks only the one or two questions that actually change the result, and before handing off, simulates the agent that has to build it to find what that agent would still have to guess.
 
-It is an [Agent Skill](https://agentskills.io) (`SKILL.md`), so it runs in Claude Code, claude.ai, Codex, Gemini CLI, Cursor, GitHub Copilot and opencode, and there is a plain-text build for ChatGPT, Gemini Gems or any model with a system prompt.
+It's an [Agent Skill](https://agentskills.io) (`SKILL.md`), so it runs in Claude Code, claude.ai, Codex, Gemini CLI, Cursor, GitHub Copilot and opencode, with a plain-text build for ChatGPT, Gemini Gems or any model with a system prompt.
 
-[Install](#install) · [How it works](#how-it-works) · [Domains](#domains) · [Contributing](#contributing)
+[Results](#does-it-actually-work) · [How it works](#how-it-works) · [Install](#install) · [Research](docs/RESEARCH.md) · [Domains](#domains) · [Contributing](#contributing)
 
 ---
 
-## What it does
+## Does it actually work?
 
-| You write | Prompt Coach does |
+Blind benchmark against the same model without the skill: simulated people with a **hidden intent** they only reveal when asked the right thing, three terse replies, then "go". A separate judge scores the final result against the hidden intent without knowing which assistant is which.
+
+| | Prompt Coach | Default Claude |
+|---|---|---|
+| Hidden-intent items captured | **36 / 36** | 34 / 36 |
+| High-impact guesses left for the executor | **3** | 8 |
+| Unmarked wrong assumptions | **0** | 2 |
+| Blind preference | **4 of 4 scenarios** | 0 of 4 |
+
+The first version lost two of the four. Both losses had clear causes (it delivered a prompt when the person wanted the email itself, and it never surfaced a hardware constraint); both were fixed and re-measured. Full method, transcripts, verdicts and honest limits (n=4, simulated users) are in [benchmark/RESULTS.md](benchmark/RESULTS.md).
+
+## How it works
+
+Every round runs an **intent engine** with a visible belief state, built on 2025-2026 research on clarification and intent discovery ([docs/RESEARCH.md](docs/RESEARCH.md) maps every rule to its evidence):
+
+1. **Mine before asking.** Your wording ("for my boss", "with friends", "quick"), earlier messages, files, the repo. Anything it can infer, it doesn't ask.
+2. **"My read".** It states its leading hypothesis about what you want, the evidence, the strongest alternative and what's still open. A wrong read costs you one word to correct.
+3. **Gate: ask, assume or defer.** A separate step decides whether a gap is worth your time. Separated monitors beat "ask if unclear" in agent studies.
+4. **The most informative move.** If your intent isn't formed yet, it **shows** 2-3 contrasting options on named axes instead of asking abstract questions. If it is forming, it asks the 1-3 multiple-choice questions that best **split its competing hypotheses**, goal first, each with a recommended default.
+5. **"Assuming:" line.** The highest-impact assumptions it would build on, visible every round, so you can veto them before "go".
+6. **Executor audit.** Before delivering, 2-3 simulated readers (a context-free coding agent, a domain expert, a skeptical QA) list what they'd still have to guess. Divergent, high-impact guesses become one last question or a marked assumption.
+7. **Short, selective output.** The finished artefact when you asked for the thing; a prompt or a Blueprint (`BRIEF.md`, `PROMPT.md`, `MILESTONES.md`) when an agent will build it. Conditional rules and edge cases explicit, contracts instead of adjectives, every guess marked.
+
+| You write | You get |
 |---|---|
-| "write me a job application" | **Quick**: a sharp v1 prompt right away with its guesses marked, plus up to 3 questions you answer with "1a 2b". |
-| "landing page for my tool" | **Standard**: 2-3 rounds, then a final prompt with a list of the assumptions inside it. |
-| "I want to build a game / an app / a SaaS" | **Deep (Blueprint)**: 4-7 phased rounds (vision → core → content & look → tech → production) using pitch samplers, reference anchors and scenario walkthroughs, ending in `BRIEF.md`, `PROMPT.md` and `MILESTONES.md`. |
-| *pastes a prompt* "the output is so generic" | Explains *why* it's generic, cuts the filler, rebuilds it with real facts. |
+| "write an email to my landlord about the heating" | **Quick**: a draft right away, 1-2 questions, then the finished email. |
+| "landing page for my tool" | **Standard**: 2-3 rounds, then the page prompt (or the page) with its assumptions listed. |
+| "I want to build a game / an app / a SaaS" | **Deep (Blueprint)**: 3-6 phased rounds, audit, then brief + master prompt + milestones (M0 = the thinnest playable or usable slice). |
+| *pastes a prompt* "the output is so generic" | Why it's generic, then a rebuilt prompt with real facts instead of adjectives. |
 
-Things that make it different from "ask clarifying questions":
+Answer lazily: `1b 2a`, `go` (finish with defaults), `decide for me`, `status`, `deeper X`, `back`, `run it`. Commands work in any language; the coach answers in yours.
 
-- **Draft first, then ask.** You always get something concrete to react to, because recognising what you want is easier than describing it.
-- **Every question has options and a recommended default.** Answer with `1b 2a`, say `go` to finish with defaults, or `decide for me`.
-- **Pitch sampler.** When the idea is fuzzy it offers 2-4 genuinely different mini-pitches to pick or mix.
-- **Domain expertise.** Playbooks surface the decisions you didn't know existed (multiplayer from day one? tenant model? art pipeline?) and push back on scope that won't ship.
-- **Decided vs. assumed vs. open.** The final brief marks what you said, what it guessed and what's still open, so the agent doesn't treat guesses as facts.
-- **Milestones that reach something usable fast.** M0 is always the thinnest playable/usable slice, with verifiable "done when" criteria.
-- **Runs it, too.** Say `run it` and it executes the final prompt in the same session.
-
-Commands work in any language, and the coach answers in whatever language you write in.
-
-**See it in action:** [a full session from 30 words to a game blueprint](examples/game-dungeon-crawler.md) (unedited).
+**See it in action:** [a full session from 30 words to a game blueprint](examples/game-dungeon-crawler.md), and every benchmark transcript in [benchmark/runs/](benchmark/runs/).
 
 ## Install
 
@@ -72,22 +85,31 @@ Commands you can use at any point:
 | `back` | Revise the last answer. |
 | `run it` | Execute the final prompt now. |
 
-In agent sessions with file access the brief lives in `.prompt-coach/<project>/` (`BRIEF.md`, `PROMPT.md`, `MILESTONES.md`) and is updated every round; in chat it's delivered in the reply.
+In agent sessions with file access the belief state and brief live in `.prompt-coach/<project>/` (`STATE.md`, `BRIEF.md`, `PROMPT.md`, `MILESTONES.md`) and are updated every round; in chat it's delivered in the reply.
 
-## How it works
+## Structure
 
 ```
 skills/prompt-coach/
-├── SKILL.md                    # depth selection, round format, commands, finishing
+├── SKILL.md                    # the loop: deliverable, read, gate, move, update, audit, compile
 └── references/
-    ├── discovery-method.md     # interview engine: phases, question design, techniques, pacing
-    ├── brief-format.md         # BRIEF.md / PROMPT.md / MILESTONES.md templates
-    ├── prompt-craft.md         # rules for writing the final prompt
-    ├── agent-prompts.md        # extra slots when an agent executes (scope, verification, guardrails)
+    ├── intent-engine.md        # belief state: hypotheses, slots, formedness, correlated dimensions, cue mining
+    ├── question-selection.md   # splitting hypotheses, answerability filters, budgets, interviewer mistakes
+    ├── probes.md               # show-don't-ask: variants on named axes, sample outputs, mockups, greyboxes
+    ├── executor-audit.md       # simulated readers list what they'd have to guess
+    ├── brief-format.md         # selective specs, contracts, spec vs. plan, milestones with drift checks
+    ├── prompt-craft.md         # rules for the final prompt
+    ├── agent-prompts.md        # extra slots when an agent executes
+    ├── discovery-method.md     # phase order and interview techniques for Deep mode
     └── domains/                # one playbook per kind of work
+agents/
+├── gap-monitor.md              # Claude Code subagent: ask / assume / defer per round
+└── executor-auditor.md         # Claude Code subagent: context-free reader of the draft brief
+benchmark/                      # scenarios, simulator, judge, transcripts, results
+docs/RESEARCH.md                # every rule mapped to its 2025-2026 evidence
 ```
 
-`SKILL.md` stays short and routes to what's needed: the coach reads the matching domain playbook plus the method files only when the request calls for them (progressive disclosure), so a quick email fix costs little context and a game blueprint gets the full method.
+`SKILL.md` stays short and routes to what's needed (progressive disclosure): a quick email costs little context, a game blueprint gets the full engine. In Claude Code the gate and the audit run as separate subagents; elsewhere the coach switches roles explicitly.
 
 ## Domains
 
