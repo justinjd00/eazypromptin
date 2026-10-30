@@ -1,0 +1,5 @@
+{
+  "name": "prompt-coach",
+  "version": "1.0.0",
+  "description": "Turns lazy prompts into full agent briefs, interactively. Bundles the prompt-coach Agent Skill."
+}

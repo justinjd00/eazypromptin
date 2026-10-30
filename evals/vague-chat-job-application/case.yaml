@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: vague-chat-job-application
+expected_outcome: |
+  Gives a concrete v1 prompt in a code block with marked assumptions, plus at most 3 high-impact questions with options and a default.

@@ -1,0 +1,10 @@
+{
+  "name": "prompt-coach",
+  "version": "1.0.0",
+  "description": "Turns lazy 30-word prompts into full agent briefs, interactively: quick prompt fixes up to deep multi-round discovery for games, apps, websites, automations, research, writing and code changes.",
+  "author": { "name": "Justin Dewitz", "url": "https://github.com/justinjd00" },
+  "homepage": "https://github.com/justinjd00/prompt-coach",
+  "repository": "https://github.com/justinjd00/prompt-coach",
+  "license": "MIT",
+  "keywords": ["prompt", "prompt-engineering", "brief", "spec", "discovery", "agent-skills"]
+}

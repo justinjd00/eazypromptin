@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: game-deep-30-words
+expected_outcome: |
+  Enters Deep mode, announces phases, offers a pitch sampler with distinct interpretations, asks 3-5 option-based questions with defaults, and after a few lazy answers delivers BRIEF.md, PROMPT.md and MILESTONES.md with assumptions marked and an M0 that is a thin playable slice.

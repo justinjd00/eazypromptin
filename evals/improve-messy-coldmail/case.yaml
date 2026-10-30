@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: improve-messy-coldmail
+expected_outcome: |
+  Keeps the useful parts, removes filler (expert persona, caps, contradictions), explains briefly why the output was generic, gives an improved prompt in a code block and asks at most 3 questions about the missing specifics (concrete benefits, recipient, CTA).

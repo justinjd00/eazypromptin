@@ -1,0 +1,12 @@
+{
+  "name": "prompt-coach",
+  "owner": { "name": "Justin Dewitz", "url": "https://github.com/justinjd00" },
+  "description": "Prompt Coach: interactive prompt and project-brief builder.",
+  "plugins": [
+    {
+      "name": "prompt-coach",
+      "source": "./",
+      "description": "Turns lazy prompts into full agent briefs, interactively."
+    }
+  ]
+}
