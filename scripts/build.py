@@ -91,12 +91,28 @@ def outputs() -> dict[Path, bytes]:
     }
 
 
+def zip_members(data: bytes) -> dict[str, bytes]:
+    with zipfile.ZipFile(io.BytesIO(data)) as zf:
+        return {n: zf.read(n) for n in zf.namelist()}
+
+
+def same_content(path: Path, data: bytes) -> bool:
+    """Compare archives by their members: deflate output differs between zlib versions."""
+    current = path.read_bytes()
+    if path.suffix in {".zip", ".skill"}:
+        try:
+            return zip_members(current) == zip_members(data)
+        except zipfile.BadZipFile:
+            return False
+    return current == data
+
+
 def main() -> None:
     check = "--check" in sys.argv
     stale = []
     for path, data in outputs().items():
         if check:
-            if not path.exists() or path.read_bytes() != data:
+            if not path.exists() or not same_content(path, data):
                 stale.append(path.relative_to(ROOT).as_posix())
         else:
             path.parent.mkdir(parents=True, exist_ok=True)
