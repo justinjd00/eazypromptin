@@ -1,8 +1,8 @@
-# Prompt Coach
+# EazyPromptin
 
 **Reads the intent behind a lazy 30-word prompt and turns it into exactly what you meant: a finished result or a full agent brief.**
 
-You type *"i wanna make a game, some dungeon thing with monsters, pixel art, maybe with friends"*. A normal assistant either guesses or fires off a questionnaire. Prompt Coach does what a good senior colleague does: it says what it thinks you mean, shows you concrete options when you haven't decided yet, asks only the one or two questions that actually change the result, and before handing off, simulates the agent that has to build it to find what that agent would still have to guess.
+You type *"i wanna make a game, some dungeon thing with monsters, pixel art, maybe with friends"*. A normal assistant either guesses or fires off a questionnaire. EazyPromptin does what a good senior colleague does: it says what it thinks you mean, shows you concrete options when you haven't decided yet, asks only the one or two questions that actually change the result, and before handing off, simulates the agent that has to build it to find what that agent would still have to guess.
 
 It's an [Agent Skill](https://agentskills.io) (`SKILL.md`), so it runs in Claude Code, claude.ai, Codex, Gemini CLI, Cursor, GitHub Copilot and opencode, with a plain-text build for ChatGPT, Gemini Gems or any model with a system prompt.
 
@@ -14,7 +14,7 @@ It's an [Agent Skill](https://agentskills.io) (`SKILL.md`), so it runs in Claude
 
 Blind benchmark against the same model without the skill: simulated people with a **hidden intent** they only reveal when asked the right thing, three terse replies, then "go". A separate judge scores the final result against the hidden intent without knowing which assistant is which.
 
-| | Prompt Coach | Default Claude |
+| | EazyPromptin | Default Claude |
 |---|---|---|
 | Hidden-intent items captured | **36 / 36** | 34 / 36 |
 | High-impact guesses left for the executor | **3** | 8 |
@@ -50,22 +50,22 @@ Answer lazily: `1b 2a`, `go` (finish with defaults), `decide for me`, `status`, 
 
 | Where | How |
 |---|---|
-| **Claude Code** (plugin) | `/plugin marketplace add justinjd00/prompt-coach` then `/plugin install prompt-coach@prompt-coach` |
-| **Any agent** via [skills CLI](https://github.com/vercel-labs/skills) (Claude Code, Codex, Cursor, Gemini CLI, Copilot, opencode, …) | `npx skills add justinjd00/prompt-coach` (add `-g` for global) |
-| **GitHub Copilot** | `gh skill install justinjd00/prompt-coach prompt-coach` |
-| **Gemini CLI** | `gemini extensions install https://github.com/justinjd00/prompt-coach` |
-| **macOS / Linux** script | `curl -fsSL https://raw.githubusercontent.com/justinjd00/prompt-coach/main/install.sh \| bash` |
-| **Windows** script | `irm https://raw.githubusercontent.com/justinjd00/prompt-coach/main/install.ps1 \| iex` |
-| **claude.ai / Claude desktop** | Download [`dist/prompt-coach.zip`](dist/prompt-coach.zip), then *Settings → Capabilities → Skills → Upload skill*. |
-| **ChatGPT Custom GPT, Gemini Gem, Mistral agent, …** | Paste [`dist/chat/instructions.md`](dist/chat/instructions.md) as instructions and upload [`dist/chat/prompt-coach-knowledge.md`](dist/chat/prompt-coach-knowledge.md) as knowledge. |
-| **API / Claude Projects / local models** | Use [`dist/prompt-coach-full.md`](dist/prompt-coach-full.md) as the system prompt (everything in one file). |
-| **Manual** | Copy `skills/prompt-coach/` to `~/.claude/skills/` (Claude Code) or `~/.agents/skills/` (Codex, Cursor, Gemini CLI, Copilot, opencode). |
+| **Claude Code** (plugin) | `/plugin marketplace add justinjd00/eazypromptin` then `/plugin install eazypromptin@eazypromptin` |
+| **Any agent** via [skills CLI](https://github.com/vercel-labs/skills) (Claude Code, Codex, Cursor, Gemini CLI, Copilot, opencode, …) | `npx skills add justinjd00/eazypromptin` (add `-g` for global) |
+| **GitHub Copilot** | `gh skill install justinjd00/eazypromptin eazypromptin` |
+| **Gemini CLI** | `gemini extensions install https://github.com/justinjd00/eazypromptin` |
+| **macOS / Linux** script | `curl -fsSL https://raw.githubusercontent.com/justinjd00/eazypromptin/main/install.sh \| bash` |
+| **Windows** script | `irm https://raw.githubusercontent.com/justinjd00/eazypromptin/main/install.ps1 \| iex` |
+| **claude.ai / Claude desktop** | Download [`dist/eazypromptin.zip`](dist/eazypromptin.zip), then *Settings → Capabilities → Skills → Upload skill*. |
+| **ChatGPT Custom GPT, Gemini Gem, Mistral agent, …** | Paste [`dist/chat/instructions.md`](dist/chat/instructions.md) as instructions and upload [`dist/chat/eazypromptin-knowledge.md`](dist/chat/eazypromptin-knowledge.md) as knowledge. |
+| **API / Claude Projects / local models** | Use [`dist/eazypromptin-full.md`](dist/eazypromptin-full.md) as the system prompt (everything in one file). |
+| **Manual** | Copy `skills/eazypromptin/` to `~/.claude/skills/` (Claude Code) or `~/.agents/skills/` (Codex, Cursor, Gemini CLI, Copilot, opencode). |
 
 The scripts install to `~/.claude/skills` and `~/.agents/skills`. Options: `--claude`, `--agents`, `--all`, `--project`, `--ref <tag>`.
 
 ## Usage
 
-Trigger it explicitly with `/prompt-coach` (in Claude Code via the plugin: `/prompt-coach:prompt-coach`), or just ask:
+Trigger it explicitly with `/eazypromptin` (in Claude Code via the plugin: `/eazypromptin:eazypromptin`), or just ask:
 
 ```
 help me flesh this out properly before claude code starts: i want to make a game ...
@@ -85,12 +85,12 @@ Commands you can use at any point:
 | `back` | Revise the last answer. |
 | `run it` | Execute the final prompt now. |
 
-In agent sessions with file access the belief state and brief live in `.prompt-coach/<project>/` (`STATE.md`, `BRIEF.md`, `PROMPT.md`, `MILESTONES.md`) and are updated every round; in chat it's delivered in the reply.
+In agent sessions with file access the belief state and brief live in `.eazypromptin/<project>/` (`STATE.md`, `BRIEF.md`, `PROMPT.md`, `MILESTONES.md`) and are updated every round; in chat it's delivered in the reply.
 
 ## Structure
 
 ```
-skills/prompt-coach/
+skills/eazypromptin/
 ├── SKILL.md                    # the loop: deliverable, read, gate, move, update, audit, compile
 └── references/
     ├── intent-engine.md        # belief state: hypotheses, slots, formedness, correlated dimensions, cue mining
@@ -126,7 +126,7 @@ docs/RESEARCH.md                # every rule mapped to its 2025-2026 evidence
 | `code-change.md` | Bugfixes, performance, refactors, features in an existing codebase |
 | `design-ui.md` | Screens, mockups, design systems, visual identity, slides |
 
-Each playbook follows [`_template.md`](skills/prompt-coach/references/domains/_template.md): what people leave out, a phased discovery map with option sets and defaults, inspiration anchors and pitch-sampler seeds, smart defaults, scope traps, brief sections, milestones and verification.
+Each playbook follows [`_template.md`](skills/eazypromptin/references/domains/_template.md): what people leave out, a phased discovery map with option sets and defaults, inspiration anchors and pitch-sampler seeds, smart defaults, scope traps, brief sections, milestones and verification.
 
 ## Contributing
 

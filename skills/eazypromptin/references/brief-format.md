@@ -12,7 +12,7 @@ Three artefacts, each with a different job:
 | `PROMPT.md` | The master prompt that starts the agent: goal, how to work, where the brief is, what to do first. | The agent, at the start of every session. |
 | `MILESTONES.md` | The work split into agent-sized milestones, each a self-contained prompt with a verifiable "done when". | The agent, one milestone at a time. |
 
-In an agent session with file access write them to `.prompt-coach/<project-slug>/` (or into the project's `docs/` if the person prefers). In chat, deliver them in the reply as three clearly headed code blocks, or as a document if the interface supports that.
+In an agent session with file access write them to `.eazypromptin/<project-slug>/` (or into the project's `docs/` if the person prefers). In chat, deliver them in the reply as three clearly headed code blocks, or as a document if the interface supports that.
 
 Why three files instead of one giant prompt: agents do their best work on one clearly scoped step at a time with the full picture available for reference. A 400-line prompt asking for everything at once yields a shallow version of everything. And why a written spec instead of the chat history: agents given the full target up front stay far more faithful than agents fed requirements bit by bit, and a persistent spec file that every milestone refers back to recovers most of that gap.
 

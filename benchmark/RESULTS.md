@@ -1,4 +1,4 @@
-# Benchmark: Prompt Coach vs. default Claude
+# Benchmark: EazyPromptin vs. default Claude
 
 Does the coach actually beat a capable model that's simply asked the same thing? This benchmark tests that with simulated people who have a **hidden intent**: what they really want, including things they only mention if something touches them.
 
@@ -7,7 +7,7 @@ Does the coach actually beat a capable model that's simply asked the same thing?
 - **4 scenarios**, each a realistic lazy opening message plus a hidden intent card ([scenarios/](scenarios/)): a game, a small SaaS for a cleaning business, an invoice automation, an email to a landlord.
 - **Simulated user** ([user-simulator.md](user-simulator.md)): terse, lowercase, answers only what is asked, reveals card facts only when a question, option or draft touches them, says "idk" to things it doesn't know, and has **at most 3 replies**, the third ending in "go". Personas are deliberately uncooperative because LLM-simulated users are known to be too helpful.
 - **Two assistants**, same model (Claude Opus 5.5), same opening message, isolated from each other:
-  - **Coach**: follows `skills/prompt-coach` in a plain chat (no subagents, so gate and audit run inline).
+  - **Coach**: follows `skills/eazypromptin` in a plain chat (no subagents, so gate and audit run inline).
   - **Default**: no skill, "respond as you naturally would".
 - **Blind judging** ([judge.md](judge.md)): a separate agent per scenario sees the card and both transcripts labelled X/Y in random order and scores the *final deliverable*:
   - intent coverage (each card item correct / wrong / missing)
@@ -68,3 +68,5 @@ In the game rerun the person mentioned the laptop constraint in round 2 because 
 - **Cost.** The coach's packages for big builds are longer (game: ~20k vs ~11k characters). The judges rated fit equal there, but it's a real trade-off.
 
 Rerun it yourself: the scenarios, simulator and judge prompts are plain text; drive them with any agent harness that can run subagents.
+
+_The project was called "prompt-coach" when these runs were recorded; transcripts and verdicts are kept unedited, so they still use the old name._

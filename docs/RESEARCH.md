@@ -1,6 +1,6 @@
 # Research basis
 
-Prompt Coach v2 is built on 2025-2026 research on clarification, intent discovery, user modelling and specification quality for AI agents. This page maps each design rule to the evidence behind it. Numbers are as reported by the papers; several are preprints, marked as such. If you find a better source or a result that contradicts a rule, please open an issue.
+EazyPromptin v2 is built on 2025-2026 research on clarification, intent discovery, user modelling and specification quality for AI agents. This page maps each design rule to the evidence behind it. Numbers are as reported by the papers; several are preprints, marked as such. If you find a better source or a result that contradicts a rule, please open an issue.
 
 ## The core idea
 

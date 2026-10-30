@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Build distributable artefacts for prompt-coach from skills/prompt-coach.
+"""Build distributable artefacts for eazypromptin from skills/eazypromptin.
 
 Outputs (in dist/):
-  prompt-coach.zip               claude.ai / Claude desktop upload (Settings > Capabilities > Skills)
-  prompt-coach.skill             same archive, opens with "Save skill" in Claude apps
-  prompt-coach-full.md           one-file system prompt for any model with a large context (API, Claude Projects, LM Studio...)
+  eazypromptin.zip               claude.ai / Claude desktop upload (Settings > Capabilities > Skills)
+  eazypromptin.skill             same archive, opens with "Save skill" in Claude apps
+  eazypromptin-full.md           one-file system prompt for any model with a large context (API, Claude Projects, LM Studio...)
   chat/instructions.md           short core instructions (< 8000 chars) for ChatGPT Custom GPTs, Gemini Gems, Mistral agents...
-  chat/prompt-coach-knowledge.md all reference files in one document, to upload as the knowledge file next to instructions.md
+  chat/eazypromptin-knowledge.md all reference files in one document, to upload as the knowledge file next to instructions.md
 
 Run:  python3 scripts/build.py          (build)
       python3 scripts/build.py --check  (fail if dist/ is out of date; used in CI)
@@ -20,7 +20,7 @@ import zipfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-SKILL = ROOT / "skills" / "prompt-coach"
+SKILL = ROOT / "skills" / "eazypromptin"
 DIST = ROOT / "dist"
 CHAT_INSTRUCTIONS_SRC = ROOT / "scripts" / "chat-instructions.md"
 CHAT_LIMIT = 8000  # ChatGPT Custom GPT instruction limit
@@ -39,7 +39,7 @@ def build_zip() -> bytes:
     buf = io.BytesIO()
     with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as zf:
         for p in skill_files():
-            info = zipfile.ZipInfo(f"prompt-coach/{p.relative_to(SKILL).as_posix()}", FIXED_TIME)
+            info = zipfile.ZipInfo(f"eazypromptin/{p.relative_to(SKILL).as_posix()}", FIXED_TIME)
             info.compress_type = zipfile.ZIP_DEFLATED
             info.external_attr = 0o644 << 16
             zf.writestr(info, p.read_bytes())
@@ -55,8 +55,8 @@ def reference_docs() -> list[Path]:
 
 def build_knowledge() -> str:
     parts = [
-        "# Prompt Coach: reference library\n",
-        "This document bundles every reference file of the prompt-coach skill. "
+        "# EazyPromptin: reference library\n",
+        "This document bundles every reference file of the eazypromptin skill. "
         "When the instructions say to read `references/<file>`, find the section headed "
         "`FILE: references/<file>` below.\n",
     ]
@@ -69,7 +69,7 @@ def build_knowledge() -> str:
 def build_full() -> str:
     core = strip_frontmatter((SKILL / "SKILL.md").read_text(encoding="utf-8"))
     preface = (
-        "<!-- Generated from skills/prompt-coach by scripts/build.py. Use as a system prompt. -->\n"
+        "<!-- Generated from skills/eazypromptin by scripts/build.py. Use as a system prompt. -->\n"
         "All files this prompt refers to as `references/...` are included at the end of this prompt "
         "under headings `FILE: references/...`. You have no file system unless your environment provides one; "
         "if it does not, deliver briefs and prompts in your replies instead of writing files.\n\n"
@@ -83,11 +83,11 @@ def outputs() -> dict[Path, bytes]:
     if len(chat) > CHAT_LIMIT:
         sys.exit(f"scripts/chat-instructions.md is {len(chat)} chars; limit is {CHAT_LIMIT}")
     return {
-        DIST / "prompt-coach.zip": z,
-        DIST / "prompt-coach.skill": z,
-        DIST / "prompt-coach-full.md": build_full().encode(),
+        DIST / "eazypromptin.zip": z,
+        DIST / "eazypromptin.skill": z,
+        DIST / "eazypromptin-full.md": build_full().encode(),
         DIST / "chat" / "instructions.md": chat.encode(),
-        DIST / "chat" / "prompt-coach-knowledge.md": build_knowledge().encode(),
+        DIST / "chat" / "eazypromptin-knowledge.md": build_knowledge().encode(),
     }
 
 

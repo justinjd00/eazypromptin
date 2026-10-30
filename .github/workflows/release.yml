@@ -26,8 +26,8 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            dist/prompt-coach.zip
-            dist/prompt-coach.skill
-            dist/prompt-coach-full.md
+            dist/eazypromptin.zip
+            dist/eazypromptin.skill
+            dist/eazypromptin-full.md
             dist/chat/instructions.md
-            dist/chat/prompt-coach-knowledge.md
+            dist/chat/eazypromptin-knowledge.md

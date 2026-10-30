@@ -1,5 +1,5 @@
 {
-  "name": "prompt-coach",
+  "name": "eazypromptin",
   "version": "2.1.0",
-  "description": "Turns lazy prompts into full agent briefs, interactively. Bundles the prompt-coach Agent Skill."
+  "description": "Turns lazy prompts into full agent briefs, interactively. Bundles the eazypromptin Agent Skill."
 }

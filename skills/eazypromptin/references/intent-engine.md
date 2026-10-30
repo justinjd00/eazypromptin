@@ -116,7 +116,7 @@ Implicit preferences hide in phrasing. Turn each into an inferred slot with its 
 
 ## 7. Where the state lives
 
-- **Agent session with files**: `.prompt-coach/<slug>/STATE.md` (hypotheses, slot table with states and evidence, conflicts), rewritten every round, next to `BRIEF.md`. It survives context limits and the person can edit it.
+- **Agent session with files**: `.eazypromptin/<slug>/STATE.md` (hypotheses, slot table with states and evidence, conflicts), rewritten every round, next to `BRIEF.md`. It survives context limits and the person can edit it.
 - **Chat**: in your reasoning, rewritten every round; shown on "status" and compressed at the end of each Deep phase:
 
 ```

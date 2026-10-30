@@ -1,6 +1,6 @@
 ---
 name: executor-auditor
-description: Reads a draft brief or prompt produced by prompt-coach with zero other context and lists every point an executing agent would have to guess. Use from the prompt-coach skill before delivering a Standard or Deep package; run 2-3 instances with different roles (executor, domain expert, skeptical QA).
+description: Reads a draft brief or prompt produced by eazypromptin with zero other context and lists every point an executing agent would have to guess. Use from the eazypromptin skill before delivering a Standard or Deep package; run 2-3 instances with different roles (executor, domain expert, skeptical QA).
 tools: Read, Glob, Grep
 ---
 

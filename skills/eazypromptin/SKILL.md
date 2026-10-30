@@ -1,13 +1,13 @@
 ---
-name: prompt-coach
-description: Reads the intent behind short, vague or lazy requests and turns it into sharp prompts and full project briefs, interactively. Use whenever someone wants to improve, rewrite or build out a prompt; wants help defining goal, scope, steps or done-criteria before an agent starts; pastes a prompt and asks how to make it better; or describes a bigger idea in a few words ("I want to make a game", "I want to build an app that...") and wants to work it out properly first. Triggers on "improve my prompt", "make this a better prompt", "help me flesh this out", "ask me what you need first", "build out my idea", "write a spec/brief for the agent", the same requests in any language, or /prompt-coach. Covers quick prompt fixes up to deep multi-round discovery for games, apps, websites, automations, research, writing and code changes. Not for tasks already clear enough to just do.
+name: eazypromptin
+description: Reads the intent behind short, vague or lazy requests and turns it into sharp prompts and full project briefs, interactively. Use whenever someone wants to improve, rewrite or build out a prompt; wants help defining goal, scope, steps or done-criteria before an agent starts; pastes a prompt and asks how to make it better; or describes a bigger idea in a few words ("I want to make a game", "I want to build an app that...") and wants to work it out properly first. Triggers on "improve my prompt", "make this a better prompt", "help me flesh this out", "ask me what you need first", "build out my idea", "write a spec/brief for the agent", the same requests in any language, or /eazypromptin. Covers quick prompt fixes up to deep multi-round discovery for games, apps, websites, automations, research, writing and code changes. Not for tasks already clear enough to just do.
 license: MIT
 metadata:
   version: "2.1.0"
-  repository: "https://github.com/justinjd00/prompt-coach"
+  repository: "https://github.com/justinjd00/eazypromptin"
 ---
 
-# Prompt Coach
+# EazyPromptin
 
 People rarely know which details matter, and they can't describe intentions they haven't formed yet. They type thirty words about the game they've imagined for months and expect the agent to read their mind. Your job is to actually do that: reconstruct the intent behind the words, make your reading visible so it can be corrected cheaply, and close only the gaps that would change what gets built.
 
@@ -130,7 +130,7 @@ Mention once, early, in one line; honour them whenever they appear, including eq
 When the remaining open items wouldn't change what gets built, or on "go":
 1. **Executor audit** (`executor-audit.md`): simulate 2-3 readers of the draft brief (a context-free coding agent, a domain expert, a skeptical QA). Each lists, in "I'd assume X because the brief doesn't say Y" form, what it would have to guess. Questions where readers diverge and the guess matters become one last short round (or visible assumptions if the person said "go"). Report the result in one line: "Audit: 14 guesses before, 2 left, both marked as assumptions."
 2. **Compile** (`brief-format.md`): short and selective. Make conditional rules, edge cases, constraints and non-defaults explicit; leave out what any competent agent does anyway. Acceptance criteria as contracts (given / must / must never). Every guess marked as an assumption.
-3. **Deliver** (section 2 decides what): the finished artefact, or for instructions-for-others: Quick → final prompt; Standard → final prompt + assumptions; Deep → `BRIEF.md`, `PROMPT.md`, `MILESTONES.md` (files in `.prompt-coach/<slug>/` when you have file access, code blocks otherwise).
+3. **Deliver** (section 2 decides what): the finished artefact, or for instructions-for-others: Quick → final prompt; Standard → final prompt + assumptions; Deep → `BRIEF.md`, `PROMPT.md`, `MILESTONES.md` (files in `.eazypromptin/<slug>/` when you have file access, code blocks otherwise).
 4. **Read back** the whole thing in three lines ("You're getting: … Built first: … Assumed: …") and offer to run it. If they said "and then build it" up front, start the first milestone instead.
 
 ## 6. Improving an existing prompt

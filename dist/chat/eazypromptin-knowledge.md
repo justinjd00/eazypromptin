@@ -1,5 +1,5 @@
-# Prompt Coach: reference library
-This document bundles every reference file of the prompt-coach skill. When the instructions say to read `references/<file>`, find the section headed `FILE: references/<file>` below.
+# EazyPromptin: reference library
+This document bundles every reference file of the eazypromptin skill. When the instructions say to read `references/<file>`, find the section headed `FILE: references/<file>` below.
 
 
 ---
@@ -82,7 +82,7 @@ Three artefacts, each with a different job:
 | `PROMPT.md` | The master prompt that starts the agent: goal, how to work, where the brief is, what to do first. | The agent, at the start of every session. |
 | `MILESTONES.md` | The work split into agent-sized milestones, each a self-contained prompt with a verifiable "done when". | The agent, one milestone at a time. |
 
-In an agent session with file access write them to `.prompt-coach/<project-slug>/` (or into the project's `docs/` if the person prefers). In chat, deliver them in the reply as three clearly headed code blocks, or as a document if the interface supports that.
+In an agent session with file access write them to `.eazypromptin/<project-slug>/` (or into the project's `docs/` if the person prefers). In chat, deliver them in the reply as three clearly headed code blocks, or as a document if the interface supports that.
 
 Why three files instead of one giant prompt: agents do their best work on one clearly scoped step at a time with the full picture available for reference. A 400-line prompt asking for everything at once yields a shallow version of everything. And why a written spec instead of the chat history: agents given the full target up front stay far more faithful than agents fed requirements bit by bit, and a persistent spec file that every milestone refers back to recovers most of that gap.
 
@@ -501,7 +501,7 @@ Implicit preferences hide in phrasing. Turn each into an inferred slot with its 
 
 ## 7. Where the state lives
 
-- **Agent session with files**: `.prompt-coach/<slug>/STATE.md` (hypotheses, slot table with states and evidence, conflicts), rewritten every round, next to `BRIEF.md`. It survives context limits and the person can edit it.
+- **Agent session with files**: `.eazypromptin/<slug>/STATE.md` (hypotheses, slot table with states and evidence, conflicts), rewritten every round, next to `BRIEF.md`. It survives context limits and the person can edit it.
 - **Chat**: in your reasoning, rewritten every round; shown on "status" and compressed at the end of each Deep phase:
 
 ```

@@ -1,10 +1,10 @@
 {
-  "name": "prompt-coach",
+  "name": "eazypromptin",
   "owner": { "name": "Justin Dewitz", "url": "https://github.com/justinjd00" },
-  "description": "Prompt Coach: interactive prompt and project-brief builder.",
+  "description": "EazyPromptin: reads the intent behind lazy prompts and builds what you meant.",
   "plugins": [
     {
-      "name": "prompt-coach",
+      "name": "eazypromptin",
       "source": "./",
       "description": "Turns lazy prompts into full agent briefs, interactively."
     }

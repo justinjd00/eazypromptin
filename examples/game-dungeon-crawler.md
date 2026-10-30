@@ -1,6 +1,6 @@
 # Example: from 30 words to a game blueprint
 
-An unedited Deep-mode session with prompt-coach. The person types a vague 30-word idea and answers lazily; four rounds later there is a brief, a master prompt and milestones Claude Code can build from.
+An unedited Deep-mode session with eazypromptin. The person types a vague 30-word idea and answers lazily; four rounds later there is a brief, a master prompt and milestones Claude Code can build from.
 
 ---
 
@@ -10,7 +10,7 @@ An unedited Deep-mode session with prompt-coach. The person types a vague 30-wor
 
 > i wanna make a game, some dungeon thing with monsters where you keep getting stronger, pixel art, maybe with friends, for pc. i know a bit of godot. help me flesh this out properly before claude code starts
 
-**Prompt Coach:**
+**EazyPromptin:**
 
 This is a bigger project, so I'm switching to **Deep mode**: Vision → Gameplay → World & look → Tech → Production, about 5 short rounds. At the end you get a brief, a master prompt for Claude Code and one prompt per milestone.
 
@@ -57,7 +57,7 @@ Shortcut: answer like "1a 2a 3b 4 b b b", or just tell me what feels off.
 
 > 1a 2b 3b 4 b b b. combat like hades
 
-**Prompt Coach:**
+**EazyPromptin:**
 
 Got it: roguelite runs, couch co-op on one PC, made to play with your friends, tense, dark, pure gameplay, and Hades-style combat. That fits together well. Local co-op is the cheap kind of multiplayer, but it still has to be in from the first milestone (two players, one shared camera, two input devices), so I'll treat it as core, not an add-on.
 
@@ -114,7 +114,7 @@ Shortcut: "1a 2a 3a 4a 5a", **go** to skip ahead with defaults, or just describe
 
 > 1a 2a 3a 4a 5a. i have no art, decide for me
 
-**Prompt Coach:**
+**EazyPromptin:**
 
 Locked in: controller co-op (keyboard + mouse solo), meta currency for permanent upgrades, one weapon per player in v1, and my co-op rules. Art is now my call too.
 
@@ -163,7 +163,7 @@ Shortcut: "1a 2a 3a 4a", **go** to skip ahead with defaults, or just describe wh
 
 > 1a 2a 3a 4a. go
 
-**Prompt Coach:**
+**EazyPromptin:**
 
 All set: cursed crypt, the recommended v1 content, Hades-style upgrade families, and my HUD proposal. You said **go**, so I've filled the Tech and Production phases with defaults. Each one is marked 🔶 in the brief, so you can veto anything before Claude Code starts.
 

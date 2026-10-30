@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# Install the prompt-coach skill for local coding agents.
+# Install the eazypromptin skill for local coding agents.
 #
-#   curl -fsSL https://raw.githubusercontent.com/justinjd00/prompt-coach/main/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/justinjd00/eazypromptin/main/install.sh | bash
 #
 # By default installs to every agent folder that exists on this machine:
 #   ~/.claude/skills   (Claude Code; also read by Cursor, Copilot, opencode)
@@ -14,7 +14,7 @@
 #   --ref <x>   install from a branch or tag (default: main)
 set -euo pipefail
 
-REPO="justinjd00/prompt-coach"
+REPO="justinjd00/eazypromptin"
 REF="main"
 MODE="auto"
 SCOPE="user"
@@ -51,13 +51,13 @@ TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
 echo "Downloading $REPO@$REF ..."
 curl -fsSL "https://codeload.github.com/$REPO/tar.gz/$REF" | tar -xz -C "$TMP"
-SRC="$(find "$TMP" -maxdepth 3 -type d -path '*/skills/prompt-coach' | head -n1)"
+SRC="$(find "$TMP" -maxdepth 3 -type d -path '*/skills/eazypromptin' | head -n1)"
 [ -f "$SRC/SKILL.md" ] || { echo "skill not found in download" >&2; exit 1; }
 
 for dir in "${TARGETS[@]}"; do
   mkdir -p "$dir"
-  rm -rf "$dir/prompt-coach"
-  cp -R "$SRC" "$dir/prompt-coach"
-  echo "Installed to $dir/prompt-coach"
+  rm -rf "$dir/eazypromptin"
+  cp -R "$SRC" "$dir/eazypromptin"
+  echo "Installed to $dir/eazypromptin"
 done
-echo "Done. Start a new session and say: /prompt-coach  (or just ask to build out a prompt)."
+echo "Done. Start a new session and say: /eazypromptin  (or just ask to build out a prompt)."
